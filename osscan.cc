@@ -551,6 +551,7 @@ void match_fingerprint(const FingerPrint *FP, FingerPrintResultsIPv4 *FPR,
   int skipfp;
   int max_prints = sizeof(FPR->matches) / sizeof(FPR->matches[0]);
   int idx;
+  int verbose = 0;
   double tmp_acc=0.0, tmp_acc2; /* These are temp buffers for list swaps */
   FingerMatch *tmp_FP = NULL, *tmp_FP2;
 
@@ -566,9 +567,14 @@ void match_fingerprint(const FingerPrint *FP, FingerPrintResultsIPv4 *FPR,
   for (current_os = DB->prints.begin(); current_os != DB->prints.end(); current_os++) {
     skipfp = 0;
 
-    acc = compare_fingerprints(*current_os, &FP_copy, DB->MatchPoints, 1);
-
-    /*    error("Comp to %s: %li/%li=%f", o.reference_FPs1[i]->OS_name, num_subtests_succeeded, num_subtests, acc); */
+    // error("current_os: %s", (*current_os)->match.OS_name);
+    if (strcmp((*current_os)->match.OS_name, "Polycom MGC videoconferencing system")) {
+        verbose = 0;
+    } else {
+        verbose = 1;
+    }
+    acc = compare_fingerprints(*current_os, &FP_copy, DB->MatchPoints, verbose);
+    /* error("Comp to %s: %li/%li=%f", o.reference_FPs1[i]->OS_name, num_subtests_succeeded, num_subtests, acc); */
     if (acc >= FPR_entrance_requirement || acc == 1.0) {
 
       state = 0;
