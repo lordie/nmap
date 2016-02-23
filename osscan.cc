@@ -568,10 +568,12 @@ void match_fingerprint(const FingerPrint *FP, FingerPrintResultsIPv4 *FPR,
     skipfp = 0;
 
     // error("current_os: %s", (*current_os)->match.OS_name);
-    if (strcmp((*current_os)->match.OS_name, "Polycom MGC videoconferencing system")) {
-        verbose = 0;
-    } else {
-        verbose = 1;
+    if (getenv("NMAP_FP")) {
+      if (strcmp((*current_os)->match.OS_name, getenv("NMAP_FP"))) {
+          verbose = 0;
+      } else {
+          verbose = 1;
+      }
     }
     acc = compare_fingerprints(*current_os, &FP_copy, DB->MatchPoints, verbose);
     /* error("Comp to %s: %li/%li=%f", o.reference_FPs1[i]->OS_name, num_subtests_succeeded, num_subtests, acc); */
